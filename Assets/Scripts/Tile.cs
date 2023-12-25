@@ -4,8 +4,12 @@ using UnityEngine;
 
 public class Tile : MonoBehaviour
 {
-    public int x;
-    public int y;
+    public int X => x;
+
+    public int Y => y;
+
+    [SerializeField] private int x;
+    [SerializeField] private int y;
     public Board board;
 
     public void Setup(int x_, int y_, Board board_)
@@ -17,19 +21,16 @@ public class Tile : MonoBehaviour
 
     public void OnMouseDown()
     {
-        print("Down");
         board.TileDown(this);
     }
     
     public void OnMouseEnter()
     {
-        print("Enter");
         board.TileOver(this);
     }
     
     public void OnMouseUp()
     {
-        print("Up");
         board.TileUp(this);
     }
 }

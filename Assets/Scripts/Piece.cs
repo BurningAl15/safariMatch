@@ -21,6 +21,10 @@ public enum PieceType
 
 public class Piece : MonoBehaviour
 {
+    public int X => x;
+
+    public int Y => y;
+
     [SerializeField] private int x;
 
     [SerializeField] private int y;
