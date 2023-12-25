@@ -63,5 +63,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: Penguin
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 7263723764348948865, guid: a330f210905c54d39b97310a3683da75, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: a330f210905c54d39b97310a3683da75, type: 3}

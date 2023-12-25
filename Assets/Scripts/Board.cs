@@ -15,14 +15,16 @@ public class Board : MonoBehaviour, ITileHandler
     [SerializeField] private GameObject tileObject;
     public GameObject[] availablePieces;
 
-    private Tile[,] Tiles;
-    private Piece[,] Pieces;
+    [SerializeField] private Tile[,] Tiles;
+    [SerializeField] private Piece[,] Pieces;
     
     Coroutine currentCoroutine = null;
 
-    private Tile startTile;
-    private Tile endTile;
+    [SerializeField] private Tile startTile;
+    [SerializeField] private Tile endTile;
 
+    private bool swappingPieces = false;
+    
     private void InitializeBoard()
     {
         Tiles = new Tile[width, height];
@@ -34,26 +36,11 @@ public class Board : MonoBehaviour, ITileHandler
     {
         // initialX = -width / 2;
         // initialY = -height / 2;
-        InitializeBoard();
         
         if (currentCoroutine == null)
             currentCoroutine = StartCoroutine(Initialize());
     }
     
-    private void SetupBoard()
-    {
-        for (int x = 0; x < width; x++)
-        {
-            for (int y = 0; y < height; y++)
-            {
-                GameObject obj = Instantiate(tileObject, new Vector3(x, y, -5), Quaternion.identity);
-                obj.transform.parent = this.transform;
-                Tiles[x, y] = obj.GetComponent<Tile>();
-                Tiles[x, y]?.Setup(x, y, this);
-            }
-        }
-    }
-
     private void SetupPieces()
     {
         for (int x = 0; x < width; x++)
@@ -69,8 +56,24 @@ public class Board : MonoBehaviour, ITileHandler
         }
     }
     
+    private void SetupBoard()
+    {
+        for (int x = 0; x < width; x++)
+        {
+            for (int y = 0; y < height; y++)
+            {
+                GameObject obj = Instantiate(tileObject, new Vector3(x, y, -5), Quaternion.identity);
+                obj.transform.parent = this.transform;
+                Tiles[x, y] = obj.GetComponent<Tile>();
+                Tiles[x, y]?.Setup(x, y, this);
+            }
+        }
+    }
+    
     IEnumerator Initialize()
     {
+        InitializeBoard();
+
         SetupBoard();
         yield return null;
         CameraEvents.Current.PositionCamera((float)(width / 2) - .5f, (float)(height / 2) - .5f);
@@ -97,24 +100,43 @@ public class Board : MonoBehaviour, ITileHandler
 
     public void TileUp(Tile _tile)
     {
-        if (startTile != null && endTile != null)
+        if (startTile != null && endTile != null && IsCloseTo(startTile, endTile))
         {
-            SwapTiles();
+           StartCoroutine( SwapTiles());
         }
-
-        startTile = null;
-        endTile = null;
     }
 
-    public void SwapTiles()
+    IEnumerator SwapTiles()
     {
         Piece startPiece = Pieces[startTile.x, startTile.y];
         Piece endPiece = Pieces[endTile.x, endTile.y];
-        
-        startPiece.Move(endTile.x,endTile.y);
+
+        startPiece.Move(endTile.x, endTile.y);
         endPiece.Move(startTile.x, startTile.y);
 
         Pieces[startTile.x, startTile.y] = endPiece;
         Pieces[endTile.x, endTile.y] = startPiece;
+
+        yield return new WaitForSeconds(0.6f);
+        
+        startTile = null;
+        endTile = null;
+        swappingPieces = false;
+        
+        yield return null;
+    }
+
+    public bool IsCloseTo(Tile start, Tile end)
+    {
+        bool horizontalMoveChecking = Math.Abs(start.x - end.x) == 1 && start.y == end.y;
+        bool verticalMoveChecking = Math.Abs(start.y - end.y) == 1 && start.x == end.x;
+
+        // return horizontalMoveChecking || verticalMoveChecking;
+        if (horizontalMoveChecking)
+            return true;
+        if (verticalMoveChecking)
+            return true;
+
+        return false;
     }
 }

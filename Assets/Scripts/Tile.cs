@@ -17,16 +17,19 @@ public class Tile : MonoBehaviour
 
     public void OnMouseDown()
     {
+        print("Down");
         board.TileDown(this);
     }
     
     public void OnMouseEnter()
     {
+        print("Enter");
         board.TileOver(this);
     }
     
     public void OnMouseUp()
     {
+        print("Up");
         board.TileUp(this);
     }
 }
