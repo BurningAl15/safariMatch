@@ -144,14 +144,18 @@ public class Board : MonoBehaviour, ITileHandler, IMatchHandler
         {
             foundMatch = true;
             Pieces[piece.X, piece.Y] = null;
-            Destroy(piece.gameObject);
+            print("Start Match");
+            StartCoroutine(piece.DestroyPiece());
+            // Destroy(piece.gameObject);
         });
         
         endMatches.ForEach(piece =>
         {
             foundMatch = true;
             Pieces[piece.X, piece.Y] = null;
-            Destroy(piece.gameObject);
+            print("End Match");
+            StartCoroutine(piece.DestroyPiece());
+            // Destroy(piece.gameObject);
         });
 
         if (!foundMatch)
