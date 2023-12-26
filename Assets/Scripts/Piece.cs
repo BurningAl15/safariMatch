@@ -34,7 +34,9 @@ public class Piece : MonoBehaviour
 
     public PieceType pieceType;
     private bool hasFinished = true;
-    
+
+    public bool HasFinished => hasFinished;
+
     public void Setup(int _x, int _y, Board _board)
     {
         pieceSprite.sprite =  SpriteManager.Current.GetSprite(pieceType);
